@@ -1,0 +1,11 @@
+Name: PSM
+Dialog-Specs: PSM.spd
+Summary: Propensity Score Matching
+Description: This dialog does propensity score matching for cases and 
+ controls.
+Author: JKP IBM SPSS
+Version: 1.4.7
+Product-Version: 19
+Date: 1/2/2014
+Plugins: Python
+Translation-Catalogues: lang

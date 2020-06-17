@@ -4,8 +4,10 @@ Summary: Propensity Score Matching
 Description: This dialog does propensity score matching for cases and 
  controls.
 Author: JKP IBM SPSS
-Version: 1.4.7
-Product-Version: 19
+Version: 2.0.0
+Product-Version: 24
 Date: 1/2/2014
+Product-Version-Maximum: 99
 Plugins: Python
+Python-Version: 3
 Translation-Catalogues: lang

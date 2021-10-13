@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>倾向得分匹配</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>倾向得分匹配</h1>此过程将单个数据集中包含的个案记录与类似控制记录进行匹配。它先通过将个案/控制组变量用作因变量来运行 Logistic 回归。然后，根据 Logistic 回归所产生的倾向得分，从控制组中为每个个案选择匹配项。此得分是个案组中的成员资格概率的估算值。
+<p>此过程将生成并激活一个新数据集，其中包含个案以及匹配的控制项。</p>
+
+  <p><span class="runinhead">组指示符</span> 请选择一个变量，用于定义记录是在个案组中还是在控制组中。变量值 1 表示个案，值 0 表示控制项。</p>
+
+  <p><span class="runinhead">预测变量</span> 请选择在 Logistic 回归中用于对个案/控制成员资格进行建模的变量。</p>
+
+  <p><span class="runinhead">倾向变量名</span> 请输入一个变量名，此变量用于存放 Logistic 回归所产生的得分（倾向）。此变量将用于执行匹配。</p>
+
+  <p class="bullet">• 此变量名不能是已在使用中的变量名。</p>
+
+  <p><span class="runinhead">匹配容差</span> 请指定将个案与控制项进行匹配时接受的得分容差。如果倾向得分之差的绝对值小于或等于此值，那么表明控制项符合个案匹配条件。值 0 表示仅进行完全匹配，值 1 表示任何控制项都可以与任何个案匹配。值越小，获得的匹配项就越接近，但这可能会增加不匹配个案数。</p>
+
+  <p class="bullet">• 此过程生成的输出表显示了给定容差时合格匹配项数的分布情况，这有助于您选择容差值。</p>
+
+  <p><span class="runinhead">个案 ID</span> 请指定个案标识变量。匹配控制项的个案 ID 值将与每个个案记录存储在一起。</p>
+
+  <p><span class="runinhead">匹配 ID 变量名</span> 请指定一个变量名，此变量用于存放所选控制记录的 ID。如果无法产生匹配，那么此变量的值将为系统缺失值。</p>
+
+  <p class="bullet">• 此变量名不能是已在使用中的变量名。</p>
+
+  <p><span class="runinhead">输出数据集名称</span> 请为要创建的数据集指定名称。此数据集将存放所有个案以及与这些个案匹配的控制项。</p>
+
+  <p class="bullet">• 此数据集名称不能是已在使用中的数据集名称。</p>
+
+  <p class="bullet">• 输出是数据集，而不是永久文件。您必须保存该数据集才能创建实际文件。</p>
+
+  <h2>选项</h2>
+
+  <p><span class="runinhead">合格个案数变量</span> 您可以选择性地输入一个变量名，用于记录每个请求者个案的控制池大小（即，每个个案记录的合格个案数）。这是在进行不放回式抽样的情况下，除去先前个案记录的匹配项后满足匹配条件的控制项数。</p>
+
+  <p class="bullet">• 此变量名不能是已在使用中的变量名。</p>
+
+  <p><span class="runinhead">抽样</span> 可以在放回或不放回的情况下抽取控制个案。</p>
+
+  <p><span class="runinhead">优先考虑完全匹配</span> 选中此框后，匹配算法将先尝试完全匹配，然后再尝试模糊匹配。</p>
+
+  <p><span class="runinhead">最优化执行性能</span> 选中此框可以最大限度提高选择匹配项时的性能 - 速度最快，内存使用量最少。对于大型数据集，应该选中此框。使用此选项后，检测不到个案与控制项匹配的可能性会略微增加。</p>
+
+  <p class="bullet">• 不能既指定优先考虑完全匹配，又指定最大限度降低内存使用量。</p>
+
+  <p><span class="runinhead">抽取匹配项时随机排列个案顺序</span>
+选中此项后，将按随机顺序抽取个案记录的匹配项。否则，将按个案记录在文件中的顺序对其进行处理。这可能会导致文件中后续可供选择的控制项数较少。如果个案记录具有系统性的顺序，那么按文件顺序进行处理可能会引入一些偏差。</p>
+
+  <p class="bullet">• 如果选中了“最优化执行性能”，那么此选项无效。</p>
+
+  <p><span class="runinhead">随机数种子</span>
+如果您希望能够使用同一数据在将来的运行中精确地重现匹配项，那么可以为您从集合中随机选择时使用的随机数设置种子值。这个种子与常规的 SPSS Statistics 随机数种子无关。</p>
+
+  <h2>其他功能部件</h2>
+
+  <p>此对话框将生成 FUZZY 扩展命令以及某些其他代码的语法。FUZZY 还提供了较常规的匹配方式。要显示 FUZZY 的语法帮助，请运行以下语法：</p>
+
+  <p class="codeblock">FUZZY /HELP。</p>
+
+  <p>FUZZY 的多项功能在此对话框中不受支持，其中包括使用单独的个案数据集和控制数据集作为输入，在不使用中间 Logistic 回归的情况下对一组变量进行匹配，以及将多个控制项与每个个案进行匹配。另外，还可以使用以 Python 编写的定制函数来计算模糊距离。</p>
+
+  <h2>要求</h2>此命令需要 Python Essentials 以及版本不低于 V20 的 IBM SPSS Statistics。对于单一数据集使用，可能需要 Statistics V21 或者 V20 的最新修订。<p>至少需要
+V1.3.0 版本的 FUZZY 扩展命令。此版本比 Statistics 21.0.0.0 随附的版本新。您可以从
+SPSS Community Web 站点 (www.ibm.com/developerworks/spssdevcentral)
+下载 Python Essentials。您可以在 Extension Commands 集合中找到最新版本的 FUZZY。</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

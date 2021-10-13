@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Propensity-Score-Abgleich</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Propensity-Score-Abgleich</h1>Diese Prozedur gleicht Falldatensätze mit ähnlichen Steuersätzen ab, die in einem einzigen Dataset enthalten sind. Sie führt zuerst eine logistische Regression mit der Fall-/Kontrollgruppenvariablen als abhängige Variable durch. Dann wählt sie einen Abgleich für jeden Fall aus der Kontrollgruppe basierend auf dem Propensity-Score aus der logistischen Regression aus. Der Score ist eine Schätzung, wie wahrscheinlich die Mitgliedschaft in der Fallgruppe ist.
+
+  <p>Die Prozedur erzeugt und aktiviert ein neues Dataset von Fällen und übereinstimmenden Kontrollgrößen.</p>
+
+  <p><span class="runinhead">Gruppenindikator:</span> Wählen Sie die Variable aus, die definiert, ob ein Datensatz sich in der Fallgruppe oder in der Kontrollgruppe befindet. Ein Variablenwert von 1 weist auf einen Fall hin, ein Wert von 0 auf eine Kontrollgröße.</p>
+
+  <p><span class="runinhead">Prädiktoren:</span> Wählen Sie die Variablen aus, die in der logistischen Regression zur Modellierung der Mitgliedschaft in der Fall- oder Kontrollgruppe verwendet werden.</p>
+
+  <p><span class="runinhead">Name für Propensity-Variable:</span> Geben Sie einen Namen für die Variable an, die den (Propensity-)Score aus der logistischen Regression enthält. Diese Variable wird für den Abgleich verwendet.</p>
+
+  <p class="bullet">•&nbsp;Der Datasetname darf nicht bereits verwendet werden.</p>
+
+  <p><span class="runinhead">Abgleichstoleranz:</span> Geben Sie die Toleranz für den Score beim Abgleichen von Fällen und Kontrollgrößen an. Eine Kontrollgröße kommt für den Abgleich eines Falls infrage, wenn der absolute Wert der Differenz in den Propensity-Scores kleiner-gleich diesem Wert ist. Ein Wert von 0 bedeutet, dass nur exakte Übereinstimmungen zulässig sind, während ein Wert von 1 angibt, dass jede Kontrollgröße jedem Fall entsprechen würde. Kleinere Werte erzeugen genauere Übereinstimmungen, können jedoch die Anzahl von Fällen ohne Entsprechung erhöhen.</p>
+
+  <p class="bullet">•&nbsp;Die von dieser Prozedur erzeugten Ausgabetabellen zeigen die Verteilung der Anzahl infrage kommender Übereinstimmungen unter Berücksichtigung der Toleranz an und können bei der Auswahl eines Toleranzwerts hilfreich sein.</p>
+
+  <p><span class="runinhead">Fall-ID:</span> Geben Sie eine Fall-ID-Variable an. Der Fall-ID-Wert für die übereinstimmende Kontrollgröße wird mit jedem Falldatensatz gespeichert.</p>
+
+  <p><span class="runinhead">Variablenname für Abgleichs-ID:</span> Geben Sie einen Namen für die Variable an, die die ID des ausgewählten Steuersatzes enthält. Wenn keine Übereinstimmung erzielt werden kann, wird der Variablenwert als systemdefiniert fehlend definiert.</p>
+
+  <p class="bullet">•&nbsp;Der Datasetname darf nicht bereits verwendet werden.</p>
+
+  <p><span class="runinhead">Name des Ausgabedatasets:</span> Geben Sie einen Namen für das zu erstellende Dataset an. Das Dataset enthält alle Fälle und übereinstimmenden Kontrollgrößen.</p>
+
+  <p class="bullet">•&nbsp;Der Datasetname darf nicht bereits verwendet werden.</p>
+
+  <p class="bullet">•&nbsp;Die Ausgabe ist ein Dataset, keine permanente Datei. Sie müssen das Dataset speichern, um eine Datei zu erstellen.</p>
+
+  <h2>Optionen</h2>
+
+  <p><span class="runinhead">Variable für Anzahl auswählbarer Fälle:</span> Geben Sie optional einen Variablennamen ein, um die Größe des Steuerpools, d. h. die Anzahl infrage kommender Fälle, für jeden Falldatensatz aufzuzeichnen. Dies ist die Anzahl der Kontrollgrößen, die die Übereinstimmungskriterien erfüllen, nachdem Übereinstimmungen für vorherige Kontrollgrößen entfernt wurden, wenn eine Stichprobenziehung ohne Ersetzung durchgeführt wird.</p>
+
+  <p class="bullet">•&nbsp;Der Datasetname darf nicht bereits verwendet werden.</p>
+
+  <p><span class="runinhead">Stichprobenziehung:</span> Für Steuerfälle kann eine Stichprobenziehung mit oder ohne Ersetzung durchgeführt werden.</p>
+
+  <p><span class="runinhead">Exakte Übereinstimmungen haben Priorität:</span> Wählen Sie dieses Feld aus, wenn der Abgleichungsalgorithmus zuerst nach einer exakten Übereinstimmung und dann nach einer groben Übereinstimmung suchen soll.</p>
+
+  <p><span class="runinhead">Ausführungsleistung maximieren:</span> Wählen Sie dieses Feld aus, um die Leistung (maximale Geschwindigkeit und minimale Speicherbelegung) bei der Auswahl von Übereinstimmungen zu maximieren. Bei großen Datasets sollte dieses Feld ausgewählt sein. Wenn es verwendet wird, besteht eine etwas höhere Wahrscheinlichkeit, dass ein Fall gefunden wird, für den es keine übereinstimmende Kontrollgröße gibt.</p>
+
+  <p class="bullet">•&nbsp;Die genaue Priorität und die Speicherminimierung können nicht zusammen angewendet werden.</p>
+
+  <p><span class="runinhead">Zufällige Fallreihenfolge beim Abgleichen:</span> Wählen Sie diese Option aus, um Abgleiche für die Falldatensätze in Zufallsreihenfolge durchzuführen. Andernfalls werden die Falldatensätze in der Reihenfolge verarbeitet, in denen sie in der Datei auftreten. Dies könnte dazu führen, dass weniger Kontrollgrößen ausgewählt werden, die später in der Datei auftreten. Wenn die Falldatensätze eine systematische Reihenfolge haben, könnte durch die Verarbeitung in dieser Reihenfolge eine gewisse Verzerrung eingeführt werden.</p>
+
+  <p class="bullet">•&nbsp;Dies hat keine Auswirkung, wenn 'Ausführungsleistung maximieren' ausgewählt ist.</p>
+
+  <p><span class="runinhead">Startwert für Zufallszahlen:</span> Wenn Sie dieselbe Übereinstimmung bei einer zukünftigen Ausführung mit denselben Daten reproduzieren wollen, können Sie einen Startwert für die Zufallszahlen festlegen, der bei der zufälligen Auswahl aus einer Gruppe verwendet wird. Dieser Startwert ist nicht mit dem allgemeinen SPSS Statistics-Startwert für Zufallszahlen verwandt.</p>
+
+  <h2>Weitere Funktionen</h2>
+
+  <p>In diesem Dialogfeld wird Syntax für den Erweiterungsbefehl FUZZY sowie anderer Code generiert. FUZZY bietet auch allgemeinere Möglichkeiten für den Abgleich. Führen Sie den folgenden Befehl aus, um die Syntaxhilfe für FUZZY anzuzeigen:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY hat eine Reihe von Funktionen, die in diesem Dialogfeld nicht unterstützt werden. Dazu gehört die Verwendung getrennter Fall- und Kontrollgrößendatasets als Eingabe, der Abgleich an einer Gruppe von Variablen ohne zwischengeschaltete logistische Regression und der Abgleich mehrerer Kontrollgrößen mit jedem Fall. In Python geschriebene benutzerdefinierte Funktionen können ebenfalls zum Berechnen des Abstands grober Übereinstimmungen verwendet werden.</p>
+
+  <h2>Anforderungen</h2>Für diesen Befehl sind Python Essentials und mindestens Version 20 von IBM SPSS Statistics erforderlich. Bei Verwendung eines einzelnen Datasets ist möglicherweise Statistics Version 21 oder ein Hotfix für Version 20 erforderlich.
+
+  <p>Mindestens Version 1.3.0 des Erweiterungsbefehls FUZZY ist erforderlich. Dies ist neuer als die mit Statistics 21.0.0.0 ausgelieferte Version. Sie können Python Essentials von der SPSS Community-Website (www.ibm.com/developerworks/spssdevcentral) herunterladen.
+  Die aktuellste Version von FUZZY finden Sie in der Sammlung der Erweiterungsbefehle.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

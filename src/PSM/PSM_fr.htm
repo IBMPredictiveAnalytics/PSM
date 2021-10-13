@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Correspondance des scores de propension</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Correspondance des scores de propension</h1>Cette procédure met en correspondance les enregistrements d'observation avec les
+enregistrements de contrôle similaires contenus dans un jeu de données unique. Elle exécute d'abord
+une régression logistique en utilisant la variable de groupe d'observations/de contrôle comme
+variable dépendante. Elle sélectionne ensuite une correspondance pour chaque observation à partir
+du score de propension issu de la régression logistique. Le score est une estimation de la
+probabilité d'appartenance dans le groupe d'observations.
+
+  <p>La procédure génère et active un nouveau jeu de données d'observations et de contrôles
+concordants.</p>
+
+  <p><span class="runinhead">Indicateur de groupe :</span> Sélectionnez la variable définissant si
+un enregistrement figure dans le groupe d'observations ou de contrôle. Une valeur de variable égale
+à 1 indique une observation et une valeur égale à 0 indique un contrôle.</p>
+
+  <p><span class="runinhead">Prédicteurs :</span> Sélectionnez les variables à utiliser dans la
+régression logistique afin de modéliser l'appartenance pour l'observation/le contrôle.</p>
+
+  <p><span class="runinhead">Nom de variable de propension :</span> Entrez un nom pour la variable en vue de maintenir le score (propension) à partir de la
+régression logistique. Cette variable sera utilisée pour la correspondance.</p>
+
+  <p class="bullet">• Le nom de la variable ne doit pas avoir déjà été attribué.</p>
+
+  <p><span class="runinhead">Tolérance de correspondance :</span> Indiquez la tolérance pour le
+score lors de la correspondance des observations et des contrôles. Un contrôle est éligible pour la
+correspondance d'une observation si la valeur absolue de la différence dans les scores de
+propension est inférieure ou égale à cette valeur. Une valeur 0 signifie des correspondances
+exactes uniquement alors qu'une valeur 1 signifie que tout contrôle doit correspondre à toutes
+observation. Des valeurs inférieures génèrent des correspondances plus proches mais risquent
+d'accroître le nombre d'observations sans correspondance.</p>
+
+  <p class="bullet">• Les tables de sortie générées par cette procédure montrent la distribution
+du nombre de correspondances éligibles en fonction de la tolérance et peuvent s'avérer utiles pour
+choisir une valeur de tolérance.</p>
+
+  <p><span class="runinhead">ID d'observation :</span> Indiquez une variable d'identificateur
+d'observation. La valeur d'ID d'observation pour le contrôle correspondant sera enregistrée avec
+chaque enregistrement d'observation.</p>
+
+  <p><span class="runinhead">Nom de variable ID de correspondance :</span>
+Indiquez un nom pour la variable utilisée pour l'ID de l'enregistrement de contrôle sélectionné. Si
+aucune correspondance ne peut être générée, la valeur de variable sera manquante par défaut.</p>
+
+  <p class="bullet">• Le nom de la variable ne doit pas avoir déjà été attribué.</p>
+
+  <p><span class="runinhead">Nom du jeu de données de sortie :</span> Indiquez un nom pour le
+jeu de données à créer. Le jeu de données contiendra toutes les observations et les contrôles mis
+en correspondance avec ces dernières.</p>
+
+  <p class="bullet">• Le nom du jeu de données ne doit pas déjà avoir été attribué.</p>
+
+  <p class="bullet">• La sortie est un jeu de données et non un fichier permanent. Vous devez
+sauvegarder le jeu de données pour créer un fichier réel.</p>
+
+  <h2>Options</h2>
+
+  <p><span class="runinhead">Variable du nombre d'observation éligibles :</span>
+Facultativement, entrez un nom de variable pour enregistrer la taille d'enregistrement du
+pool de contrôle, par exemple, le nombre d'observations éligibles, pour chaque
+enregistrement d'observation. Il s'agit du nombre de contrôles conformes aux critères de
+correspondance une fois les correspondances des enregistrements d'observation précédents supprimés,
+lorsque l'échantillonnage s'effectue sans remplacement.</p>
+
+  <p class="bullet">• Le nom de la variable ne doit pas avoir déjà été attribué.</p>
+
+  <p><span class="runinhead">Echantillonnage :</span> Les observations de contrôle peuvent être
+créées avec ou sans remplacement.</p>
+
+  <p><span class="runinhead">Priorité aux correspondances exactes :</span> Sélectionnez cette case à
+cocher pour que l'algorithme de correspondance recherche une correspondance exacte avant une
+correspondance floue.</p>
+
+  <p><span class="runinhead">Optimisation des performances d'exécution :</span> Sélectionnez cette case à cocher pour optimiser les performances d'exécution lors du choix des
+correspondances - vitesse maximale et utilisation minimale de la mémoire. Pour les jeux de données
+volumineux cette case à cocher doit être sélectionnée. Dans ce cas il y a un peu plus de
+chance de trouver une observation sans correspondance avec un contrôle.</p>
+
+  <p class="bullet">• Vous ne pouvez pas indiquer à la fois une priorité exacte et une utilisation
+minimale de la mémoire.</p>
+
+  <p><span class="runinhead">Organisation aléatoire des observations lors de la création des
+correspondances :</span> Sélectionnez cette case à cocher afin de créer des correspondances pour les
+enregistrements d'observation selon un ordre aléatoire. Sinon, les enregistrements
+d'observation sont traités selon l'ordre où ils se présentent dans le fichier. Cela peut avoir pour
+conséquence qu'il y aura ensuite moins de contrôles à partir desquels effectuer la
+sélection dans le fichier. Si les enregistrements d'observation suivent un ordre rigoureux, le
+traitement suivant l'ordre du fichier peut créer une distorsion.</p>
+
+  <p class="bullet">• Ceci n'a aucun effet lorsque l'optimisation des performances d'exécution est
+sélectionnée.</p>
+
+  <p><span class="runinhead">Valeur de départ de nombre aléatoire :</span> Si vous voulez reproduire
+exactement les mêmes correspondances lors d'une exécution ultérieure avec les mêmes données, vous
+pouvez définir une valeur de départ pour les nombres aléatoires utilisés lors de la sélection
+aléatoire dans un ensemble. Cette valeur de départ est sans rapport avec la valeur de départ de
+nombre aléatoire SPSS Statistics générale.</p>
+
+  <h2>Fonctions supplémentaires</h2>
+
+  <p>Cette boîte de dialogue génère une syntaxe pour la commande d'extension FUZZY, ainsi que du
+code. La commande FUZZY fournit également d'autres moyens d'effectuer la correspondance. Pour
+afficher l'aide sur la syntaxe de la commande FUZZY, exécutez la syntaxe suivante :</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>La commande FUZZY comporte un certain nombre de fonctions non prises en charge dans cette
+boîte de dialogue, notamment l'utilisation de jeux de données d'observation et de contrôle
+distincts en entrée, la mise en correspondance basée sur un ensemble de variables sans la
+régression logistique intermédiaire, et la mise en correspondance de plusieurs contrôles avec
+chacune des observations. Les fonctions personnalisées écrites dans Python peuvent également être
+utilisées pour calculer les distances floues.</p>
+
+  <h2>Conditions requises</h2>Cette commande requiert Python Essentials et au moins la version 20 d'IBM SPSS Statistics. L'utilisation d'un jeu de données unique peut
+nécessiter Statistics version 21 ou un correctif logiciel pour la version 20.
+
+  <p>Elle nécessite au moins la version 1.3.0 de la commande d'extension FUZZY. Elle est plus
+récente que la version fournie avec Statistics 21.0.0.0. Vous pouvez télécharger Python Essentials à partir du site Web de la communauté SPSS à
+l'adresse www.ibm.com/developerworks/spssdevcentral.
+  La dernière version de la commande FUZZY se trouve dans la collection des commandes d'extension.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

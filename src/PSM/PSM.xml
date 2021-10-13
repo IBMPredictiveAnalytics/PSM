@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Extension xmlns="http://spss.com/clementine/extensions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" debug="false" version="1.0" xsi:schemaLocation="http://spss.com/clementine/extensions http://xml.spss.com/clementine/extensions/CLEFSpecificationFile.xsd">
+	<ExtensionDetails copyright="Licensed Materials - Property of IBM.  IBM SPSS Products: Statistics Common (C) Copyright IBM Corp. 1989, 2013.  US Government Users Restricted Rights - Use, duplication or  disclosure restricted by GSA ADP Schedule Contract with IBM Corp." description="" id="PSM" label="" provider="SPSS, Inc." providerTag="spss" version="1.0"/>
+	<Resources>
+		<Bundle id="bundle1" path="PSM" type="properties"/>
+	</Resources>
+	<CommonObjects>
+		<Actions>
+			<Action id="PSM_action" imagePath="IBMdialogicon.png" label="Propensity Score Matching..." labelKey="PSM_action.LABEL"/>
+		</Actions>
+	</CommonObjects>
+	<UserInterface>
+		<Controls>
+			<MenuItem action="PSM_action" offset="17" showIcon="true" spssMenu="Data"/>
+		</Controls>
+	</UserInterface>
+	<Node id="PSM" label="Propensity Score Matching" labelKey="PSM.LABEL" type="modelBuilder">
+		<Properties>
+			<Property addOns="[Python]" name="PSM" syntax="* Propensity Score Matching.&#10;begin program python3.&#10;import spss, random, spssaux, codecs&#10;try:&#10;   import FUZZY&#10;except:&#10;   print(&quot;This procedure requires the FUZZY extension command which is not installed.&quot;)&#10;parts = [int(i) for i in FUZZY.__version__.split(&quot;.&quot;)]&#10;if  parts &lt; [1,3,0]:&#10;   raise EnvironmentError(&quot;This procedure requires version 1.3.0 or later of FUZZY&quot;)&#10;ds = spss.ActiveDataset()&#10;if ds ==&quot;*&quot;:&#10;   ds = &quot;D&quot; + str(random.random())&#10;   spss.Submit(&quot;DATASET NAME &quot; + ds)&#10;matchgroup = &quot;M&quot; + str(random.random())  #temporary variable&#10;tempdsname = &quot;D&quot; + str(random.random())&#10;lrcmd = spssaux.u(r&quot;&quot;&quot;LOGISTIC REGRESSION VARIABLES %%group%%&#10;     /METHOD=ENTER %%by%%&#10;     /SAVE=PRED(%%propensity%%).&quot;&quot;&quot;)&#10;try:&#10;   spss.Submit(lrcmd)&#10;except:&#10;   raise ValueError(&quot;Logistic Regression step failed&quot;)&#10;&#10;fuzzycmd = spssaux.u(r&quot;&quot;&quot;FUZZY BY=%%propensity%% SUPPLIERID=%%id%% NEWDEMANDERIDVARS=%%newdemanderid%% &#10;GROUP=%%group%% %%exactpriority%%&#10;%%drawpoolsize%% MATCHGROUPVAR=%(matchgroup)s %%fuzz%% DS3=%(tempdsname)s&#10;/OPTIONS %%sampling%% %%minimizememory%% %%shuffle%% %%seed%%.&#10;DELETE VARIABLES %(matchgroup)s.&#10;DATASET ACTIVATE %(ds)s.&#10;DELETE VARIABLES %(matchgroup)s.&#10;DATASET COPY %%outputdataset%%.&#10;DATASET ACTIVATE %%outputdataset%%.&#10;SELECT IF %%group%% EQ 1.&#10;&#10;DATASET ACTIVATE %(tempdsname)s.&#10;DATASET ACTIVATE %%outputdataset%%.&#10;ADD FILES /FILE=* /FILE=%(tempdsname)s.&#10;EXECUTE.&#10;DATASET CLOSE %(tempdsname)s.&quot;&quot;&quot; % locals())&#10;&#10;spss.Submit(fuzzycmd)&#10;end program.&#10;&#10;&#10;&#10;"/>
+			<Property description="false" name="PSM_modal"/>
+			<Property description="" descriptionKey="source_vars_tooltip.LABEL" isList="true" label="Variables:" labelKey="source_vars.LABEL" name="source_vars" selectionPool="source_fields" syntax="%%ThisValue%%" valueType="field"/>
+			<Property description="Select one or more variables for the propensity model" descriptionKey="by_tooltip.LABEL" isList="true" isRequired="true" label="Predictors:" labelKey="by.LABEL" name="by" selectionPool="source_fields" syntax="%%ThisValue%%" valueType="field"/>
+			<Property description="Select the variable that distinguishes cases and controls.  Value 1 indicates cases and 0 indicates controls" descriptionKey="group_tooltip.LABEL" isList="true" isRequired="true" label="Group Indicator:" labelKey="group.LABEL" name="group" selectionPool="source_fields" syntax="%%ThisValue%%" valueType="field"/>
+			<Property description="This variable is used to identify the matched case" descriptionKey="id_tooltip.LABEL" isList="true" isRequired="true" label="Case ID:" labelKey="id.LABEL" name="id" selectionPool="source_fields" syntax="%%ThisValue%%" valueType="field"/>
+			<Property defaultValue="" description="Enter a variable name that does not already exist in the dataset" descriptionKey="newdemanderid_tooltip.LABEL" isRequired="true" label="Match ID Variable Name(must not already exist):" labelKey="newdemanderid.LABEL" name="newdemanderid" syntax="%%ThisValue%%" valueType="fieldName"/>
+			<Property defaultValue="" description="Enter a name for a variable to hold the number of available matches for each case" descriptionKey="drawpoolsize_tooltip.LABEL" label="Variable for Number of Eligible Cases (must not already exist):" labelKey="drawpoolsize.LABEL" name="drawpoolsize" syntax="DRAWPOOLSIZE=%%ThisValue%%" valueType="fieldName"/>
+			<Property defaultValue="without" description="" descriptionKey="sampling_tooltip.LABEL" label="Sampling" labelKey="sampling.LABEL" name="sampling" syntax="SAMPLEWITHREPLACEMENT=%%ThisValue%%" valueType="enum">
+				<Enumeration>
+					<Enum description="" descriptionKey="without_tooltip.LABEL" hasSubGroup="false" label="Without replacement" labelKey="without.LABEL" mnemonic="W" mnemonicKey="without_mnemonic.VALUE" syntax="FALSE" value="without"/>
+					<Enum description="" descriptionKey="with_tooltip.LABEL" hasSubGroup="false" label="With replacement" labelKey="with.LABEL" mnemonic="R" mnemonicKey="with_mnemonic.VALUE" syntax="TRUE" value="with"/>
+				</Enumeration>
+			</Property>
+			<Property defaultValue="true" description="Exact priority and minimize memory cannot be used together" descriptionKey="minimizememory_tooltip.LABEL" label="Maximize execution performance" labelKey="minimizememory.LABEL" name="minimizememory" syntax="MINIMIZEMEMORY=TRUE±MINIMIZEMEMORY=FALSE" valueType="boolean"/>
+			<Property defaultValue="false" description="Randomize the order in which case matches are drawn" descriptionKey="shuffle_tooltip.LABEL" label="Randomize case order when drawing matches" labelKey="shuffle.LABEL" name="shuffle" syntax="SHUFFLE=TRUE±SHUFFLE=FALSE" valueType="boolean"/>
+			<Property defaultValue="" description="Enter a number if you want to repeat the analysis exactly" descriptionKey="seed_tooltip.LABEL" label="Random Number Seed:" labelKey="seed.LABEL" name="seed" syntax="SEED=%%ThisValue%%" valueType="double"/>
+			<Property defaultValue="false" description="Exact priority and minimize memory cannot be used together" descriptionKey="exactpriority_tooltip.LABEL" label="Give priority to exact matches" labelKey="exactpriority.LABEL" name="exactpriority" syntax="EXACTPRIORITY=TRUE±EXACTPRIORITY=FALSE" valueType="boolean"/>
+			<Property defaultValue="" description="" descriptionKey="outputdataset_tooltip.LABEL" isRequired="true" label="Output Dataset Name (must not already exist):" labelKey="outputdataset.LABEL" name="outputdataset" syntax="%%ThisValue%%" valueType="fieldName"/>
+			<Property defaultValue="" description="Enter a name for a variable to hold the propensity score" descriptionKey="propensity_tooltip.LABEL" isRequired="true" label="Name for Propensity Variable (must not already exist):" labelKey="propensity.LABEL" name="propensity" syntax="%%ThisValue%%" valueType="fieldName"/>
+			<Property defaultValue="" description="Enter a number between 0 and 1 for the maximum propensity difference allowed for a match.  Smaller values produce closer matches but may increase the number of failed matches" descriptionKey="fuzz_tooltip.LABEL" isRequired="true" label="Match Tolerance:" labelKey="fuzz.LABEL" max="1.000000" min="0.000000" name="fuzz" syntax="FUZZ=%%ThisValue%%" valueType="double"/>
+		</Properties>
+		<SelectionPool id="source_fields" type="fields"/>
+		<UserInterface>
+			<Tabs>
+				<Tab helpLink="PSM.htm">
+					<PropertiesPanel>
+						<SourceFieldsBrowser copyFields="false" mnemonic="V" mnemonicKey="source_vars_mnemonic.VALUE" property="source_vars" selectionPool="source_fields" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="both" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="1.0"/>
+						</SourceFieldsBrowser>
+						<StaticText text="The procedure requires the Statistics Regression module\nand the Python Essentials" textKey="item_4.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="2" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<MultiFieldChooserControl mnemonic="D" mnemonicKey="by_mnemonic.VALUE" property="by" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="both" gridColumn="2" gridRow="1" gridWidth="1" rowWeight="1.0"/>
+						</MultiFieldChooserControl>
+						<SingleFieldChooserControl mnemonic="G" mnemonicKey="group_mnemonic.VALUE" property="group" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+						</SingleFieldChooserControl>
+						<SingleFieldChooserControl mnemonic="C" mnemonicKey="id_mnemonic.VALUE" property="id" storage="[real integer date time string]">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="4" gridWidth="1" rowWeight="0.0"/>
+						</SingleFieldChooserControl>
+						<TextBoxControl mnemonic="T" mnemonicKey="newdemanderid_mnemonic.VALUE" property="newdemanderid">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="5" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<PropertiesSubPanel buttonLabel="Options..." buttonLabelKey="options.LABEL" dialogTitle="Options:" dialogTitleKey="optionssub.TITLE" helpLink="" mnemonic="O" mnemonicKey="options_mnemonic.VALUE">
+							<Layout columnWeight="0.0" fill="none" gridColumn="3" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+							<PropertiesPanel>
+								<TextBoxControl mnemonic="V" mnemonicKey="drawpoolsize_mnemonic.VALUE" property="drawpoolsize">
+									<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="0" gridWidth="1" rowWeight="0.0"/>
+								</TextBoxControl>
+								<RadioButtonGroupControl property="sampling" rows="2" useSubPanel="false">
+									<Layout columnWeight="1.0" fill="both" gridColumn="0" gridRow="1" gridWidth="1" rowWeight="1.0"/>
+									<RadioButton property="without"/>
+									<RadioButton property="with"/>
+								</RadioButtonGroupControl>
+								<CheckBoxControl mnemonic="M" mnemonicKey="minimizememory_mnemonic.VALUE" property="minimizememory">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="3" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+								<CheckBoxControl mnemonic="A" mnemonicKey="shuffle_mnemonic.VALUE" property="shuffle">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="4" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+								<TextBoxControl mnemonic="N" mnemonicKey="seed_mnemonic.VALUE" property="seed">
+									<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="5" gridWidth="1" rowWeight="0.0"/>
+								</TextBoxControl>
+								<CheckBoxControl mnemonic="G" mnemonicKey="exactpriority_mnemonic.VALUE" property="exactpriority">
+									<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="2" gridWidth="1" rowWeight="0.0"/>
+								</CheckBoxControl>
+							</PropertiesPanel>
+						</PropertiesSubPanel>
+						<TextBoxControl mnemonic="U" mnemonicKey="outputdataset_mnemonic.VALUE" property="outputdataset">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="6" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<TextBoxControl mnemonic="N" mnemonicKey="propensity_mnemonic.VALUE" property="propensity">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="2" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<StaticText text="This procedure runs a logistic regression on the group\nindicator and then uses the resulting propensity\nvariable to select controls for the cases" textKey="item_1383.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="1" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<TextBoxControl mnemonic="M" mnemonicKey="fuzz_mnemonic.VALUE" property="fuzz">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="2" gridRow="3" gridWidth="1" rowWeight="0.0"/>
+						</TextBoxControl>
+						<StaticText text="At least version 1.3.0 of  the FUZZY extension\ncommand is required" textKey="item_63.LABEL">
+							<Layout columnWeight="1.0" fill="none" gridColumn="0" gridRow="3" gridWidth="1" rowWeight="0.0"/>
+						</StaticText>
+						<StaticText text="This dialog was created using a later version of PASW Statistics\nand certain features may not function as intended." textKey="v17_warning.LABEL">
+							<Layout columnWeight="1.0" fill="horizontal" gridColumn="0" gridRow="4" gridWidth="1" rowWeight="1.0"/>
+						</StaticText>
+					</PropertiesPanel>
+				</Tab>
+			</Tabs>
+		</UserInterface>
+	</Node>
+</Extension>

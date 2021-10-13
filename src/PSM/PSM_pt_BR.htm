@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Correspondência de Escore de Propensão</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Correspondência de Escore de Propensão</h1>Este procedimento corresponde registros de caso com registros de controle semelhantes contidos em um único conjunto de dados. Ele primeiro executa uma regressão logística com a variável de grupo caso/controle como a variável dependente. Em seguida, ele seleciona uma correspondência para cada caso a partir do grupo de controle baseado no escore de propensão da regressão logística. O escore é uma estimativa da probabilidade de associação no grupo de caso.
+
+  <p>O procedimento produz e ativa um novo conjunto de dados de casos e controles correspondidos.</p>
+
+  <p><span class="runinhead">Indicador de Grupo</span> Selecione a   variável que define se um registro está no grupo de caso ou de   controle. Um valor de variável de um indica um caso e um valor de zero indica um controle.</p>
+
+  <p><span class="runinhead">Preditores</span> Selecione as variáveis   a serem usadas na regressão logística para modelar a associação   caso/controle.</p>
+
+  <p><span class="runinhead">Nome para a Variável de Propensão</span>   Insira um nome para a variável para conter o escore (propensão) da regressão logística. Essa variável será utilizada para correspondência.</p>
+
+  <p class="bullet">• O nome da variável não deve estar em uso.</p>
+
+  <p><span class="runinhead">Tolerância de Correspondência</span> Especifique a tolerância   para o escore em casos e controles de correspondência. Um controle é elegível para corresponder a um caso se o valor absoluto da diferença nos escores de propensão for menor ou igual a esse valor. Um valor 0 significa correspondências exatas apenas enquanto um valor de 1 significar que qualquer controle poderia corresponder a qualquer caso. Valores menores produzem correspondências mais próximas, mas podem aumentar o número de casos sem correspondência.</p>
+
+  <p class="bullet">• A tabela de saída produzida por este procedimento mostra a distribuição do número de correspondências elegíveis fornecida a tolerância e pode ser útil na escolha um valor de tolerância.</p>
+
+  <p><span class="runinhead">ID de Caso</span> Especifique uma variável identificadora de caso. O valor do ID de Caso para o controle correspondido será armazenado com cada registro do caso.</p>
+
+  <p><span class="runinhead">Nome de Variáveis de ID de Correspondência</span>   Especifique um nome para a variável que conterá o ID do registro   de controle selecionado. Se uma correspondência não puder ser produzida, o valor da variável será omisso do sistema.</p>
+
+  <p class="bullet">• O nome da variável não deve estar em uso.</p>
+
+  <p><span class="runinhead">Nome do Conjunto de Dados de Saída</span> Especifique um   nome para o conjunto de dados a ser criado. O conjunto de dados irá reter todos os casos e os controles que foram correspondidos com eles.</p>
+
+  <p class="bullet">• O nome do conjunto de dados não deve já estar em uso.</p>
+
+  <p class="bullet">• A saída é um conjunto de dados, não um arquivo permanente. Você deve salvar o conjunto de dados para criar um arquivo real.</p>
+
+  <h2>Opções</h2>
+
+  <p><span class="runinhead">Variável para Número de Casos Elegíveis</span> Opcionalmente, insira um nome de variável para registrar o tamanho do conjunto de controle, isto é, o número de casos elegíveis para cada registro de caso. Este é o número de controles que atendam aos critérios de correspondência depois de correspondências para os registros de caso anteriores serem removidas, se amostragem, sem reposição.</p>
+
+  <p class="bullet">• O nome da variável não deve estar em uso</p>
+
+  <p><span class="runinhead">Amostragem</span> Os casos de controle podem ser desenhados com ou sem reposição.</p>
+
+  <p><span class="runinhead">Dar prioridade a correspondência exata</span>   Marque esta caixa para que o algoritmo de correspondência tente primeiro uma   correspondência exata antes de tentar uma correspondência difusa.</p>
+
+  <p><span class="runinhead">Maximizar o desempenho de execução</span>   Marque esta caixa para maximizar o desempenho de execução -   velocidade máxima e uso de memória mínimo. Para grandes conjuntos de dados, esta caixa deve ser marcada. Quando ela é usada, há uma chance um pouco maior de que um caso não localizado seja correspondido com um controle.</p>
+
+  <p class="bullet">• Você pode especificar prioridade exata e minimizar memória.</p>
+
+  <p><span class="runinhead">Escolher ordem de caso aleatoriamente ao traçar correspondências</span> Marque para desenhar correspondências para os registros de caso   em ordem aleatória. Caso contrário, os registros de caso são processados na   ordem na qual eles ocorrem no arquivo. Isso poderia resultar em   menos controles para selecionar mais tarde no arquivo. Se os registros de caso tiverem uma ordem sistemática, o processamento na ordem do arquivo pode introduzir algum viés.</p>
+
+  <p class="bullet">• Isso não tem efeito quando a opção Maximizar o desempenho de execução está marcada.</p>
+
+  <p><span class="runinhead">Semente de Número Aleatório</span> Para ter a capacidade de reproduzir as correspondências exatamente em uma futura execução com os mesmos dados, configure um valor semente para os números aleatórios usados na escolha aleatória em um conjunto. Essa semente não está relacionada com a semente de número aleatório geral do SPSS Statistics.</p>
+
+  <h2>Recursos adicionais</h2>
+
+  <p>Este diálogo gera sintaxe para o comando de extensão FUZZY bem como alguns outros códigos. FUZZY também fornece maneiras mais gerais para fazer correspondência. Para exibir ajuda de sintaxe para FUZZY, execute a seguinte sintaxe:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY possui vários recursos não suportados neste diálogo, incluindo o uso de conjuntos de dados de caso e de conjunto separados como entrada, correspondência em um conjunto de variáveis sem a regressão logística intermediária e correspondência de vários controles com cada caso. Funções customizadas gravadas em Python também podem ser usadas para calcular a distância difusa.</p>
+
+  <h2>Requisitos</h2>Este comando requer o Python Essentials   e pelo menos a versão 20 do IBM SPSS Statistics. Para   uso de conjunto de dados único, o Statistics versão 21 ou um hot fix para a versão 20   pode ser necessário.
+
+  <p>Ele requer pelo menos a versão 1.3.0 do comando de extensão FUZZY. Ele é mais recente que a versão fornecida com o Statistics 21.0.0.0 Você pode fazer download do Python Essentials no website da SPSS Community em www.ibm.com/developerworks/spssdevcentral.
+  A versão mais recente de FUZZY pode ser localizada na coleção de Comandos de Extensão.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

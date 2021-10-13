@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>傾向評分比對</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>傾向評分比對</h1>此程序將觀察值記錄與包含在單一資料集中的類似控制項記錄進行比對。它先使用觀察值/控制項群組變數作為依變數執行 logistic 迴歸。然後根據 logistic 迴歸中的傾向分數從控制項群組中選取每一個觀察值的相符項。評分是對觀察值群組中成員資格機率的估計。
+  <p>該程序會產生並啟動觀察值和相符控制項的新資料集。</p>
+
+  <p><span class="runinhead">群組指示字元</span> 選取定義記錄是在觀察值群組中還是在控制項群組中的變數。變數值 1 指示觀察值，值 0 指示控制項。</p>
+
+  <p><span class="runinhead">解釋變數</span> 選取要在 logistic 迴歸中用來為觀察值/控制項成員資格建模的變數。</p>
+
+  <p><span class="runinhead">傾向變數的名稱</span> 輸入用來保留 logistic 迴歸中評分（傾向）之變數的名稱。此變數將用於進行比對。</p>
+
+  <p class="bullet">• 變數名稱不得已使用。</p>
+
+  <p><span class="runinhead">比對容差</span> 指定比對觀察值和控制項時評分的容差。如果傾向評分中差異的絕對值小於或等於此值，可認為控制項符合觀察值。值 0 表示僅完全相符，而值 1 表示任何控制項符合任何觀察值。值越小產生的相符項越接近，但可能會增加不相符觀察值的數目。</p>
+
+  <p class="bullet">• 此程序產生的輸出表格顯示在給定的容差範圍內合格相符項數目的分佈，這在選擇容差值時十分有用。</p>
+
+  <p><span class="runinhead">觀察值 ID</span> 指定觀察值 ID 變數。相符控制項的觀察值 ID 值將與每個觀察值記錄一起儲存。</p>
+
+  <p><span class="runinhead">相符 ID 變數名稱</span> 指定將保留所選控制項記錄 ID 之變數的名稱。如果無法產生相符項，變數值將為系統遺漏。</p>
+
+  <p class="bullet">• 變數名稱不得已使用。</p>
+
+  <p><span class="runinhead">輸出資料集名稱</span> 指定要建立的資料集的名稱。資料集將保留所有觀察值以及與之相符的控制項。</p>
+
+  <p class="bullet">• 資料集名稱不得已使用。</p>
+
+  <p class="bullet">• 輸出是資料集，而非永久檔。您必須儲存資料集才能建立實際檔案。</p>
+
+  <h2>選項</h2>
+
+  <p><span class="runinhead">合格觀察值數目的變數</span> 選擇性地輸入用來記錄每個觀察值記錄的控制項儲存區大小（即合格觀察值數目）的變數名稱。如果是不放回取樣，這是在移除之前的觀察值記錄的相符項後符合比對準則的控制項數目。</p>
+
+  <p class="bullet">• 變數名稱不得已使用</p>
+
+  <p><span class="runinhead">取樣</span> 可使用放回或不放回的方式抽取控制項觀察值。</p>
+
+  <p><span class="runinhead">優先嘗試完全相符</span> 勾選此方框可使比對演算法首先嘗試完全相符，然後再嘗試模糊相符。</p>
+
+  <p><span class="runinhead">最大化執行效能</span> 勾選此方框可在選取相符項時實現效能最大化 - 速度最快且記憶體用量最少。對於大型資料集，應勾選此方框。使用此選項時，觀察值找不到相符控制項的可能性會略大一些。</p>
+
+  <p class="bullet">• 不能同時指定完全相符優先和記憶體最小。</p>
+
+  <p><span class="runinhead">抽取相符項時隨機化觀察值順序</span> 勾選此選項可按隨機順序抽取觀察值記錄的相符項。否則，會依觀察值記錄在檔案中的出現順序對其進行處理。這可能會導致從檔案較後面的部分中選取的控制項較少。如果觀察值記錄有系統順序，依檔案中的順序處理可能會導致部分偏移。</p>
+
+  <p class="bullet">• 勾選最大化執行效能時，此選項無效。</p>
+
+  <p><span class="runinhead">亂數種子</span> 如果希望將來以相同資料執行時，能重新產生完全相同的相符項，您可以為從集中隨機挑選時使用的亂數設定種子值。此種子與一般 SPSS Statistics 亂數種子無關。</p>
+
+  <h2>其他特性</h2>
+
+  <p>此對話框產生 FUZZY 延伸指令的語法和部分其他代碼。FUZZY 還提供更多的一般方式來進行比對。若要顯示 FUZZY 的語法說明，請執行下列語法：</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY 有若干項在此對話框中不支援的功能，其中包括使用獨立觀察值和控制項資料集作為輸入，在沒有中繼 logistic 迴歸的一組變數上進行比對，以及將多個控制項與每一個觀察值比對。以 Python 撰寫的自訂函數也可以用於計算模糊距離。</p>
+
+  <h2>需求</h2>此指令需要 Python Essentials，且至少為 IBM SPSS Statistics 第 20 版。如果是單一資料集用法，可能需要 Statistics 第 21 版，或第 20 版的緊急修復程式。<p>它至少需要 1.3.0 版的 FUZZY 延伸指令。該版本比 Statistics 21.0.0.0 隨附的版本更新。您可以從 SPSS 社群網站下載 Python Essentials，網址為 www.ibm.com/developerworks/spssdevcentral。最新版本的 FUZZY 可以在延伸指令集合中找到。</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

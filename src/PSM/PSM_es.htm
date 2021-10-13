@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Comparación de puntuación de propensión</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Comparación de puntuación de propensión</h1>Este procedimiento coincide los registros de casos con registros de control similares incluidos en un único conjunto de datos. En primer lugar, ejecuta una regresión logística con la variable de grupo de caso/control como la variable dependiente. Después, selecciona una coincidencia para cada caso desde el grupo de control basándose en la puntuación de propensión de la regresión logística. La puntuación es una estimación de la probabilidad de pertenencia del grupo del caso.
+
+  <p>El procedimiento genera y activa un nuevo conjunto de datos de casos y controles coincidentes.</p>
+
+  <p><span class="runinhead">Indicador de grupo</span> Seleccione la   variable que defina si un registro está en el grupo de caso o control. Un valor de variable de uno indica un caso, y un valor de cero indica un control.</p>
+
+  <p><span class="runinhead">Predictores</span> Seleccione las variables que se van a utiulizar en la regresión logística para modelar la pertenencia del caso/control.</p>
+
+  <p><span class="runinhead">Nombre para variable de propensión</span> Entre un nombre para la variable para que contenga la puntuación (propensión) de la regresión logística. Esta variable se utilizará para la coincidencia.</p>
+
+  <p class="bullet">• El nombre de variable todavía no debe estar en uso.</p>
+
+  <p><span class="runinhead">Tolerancia de coincidencia</span> Especifique la tolerancia para la puntuación en la coincidencia de casos y controles. Un control es apto para que coincida con un caso, si el valor absoluto de la diferencia en las puntuaciones de propensión es menor o igual que este valor. Un valor de 0 significa sólo coincidencias exactas, mientras que un valor de 1 significa que cualquier control coincidiría con cualquier caso. Los valores más pequeños generan coincidencias más próximas, pero puede aumentar el número de casos no coincidentes.</p>
+
+  <p class="bullet">• Las tablas de salida generadas por este procedimiento muestran la distribución del número de coincidencias aptas dada la tolerancia y pueden ser útiles al elegir un valor de tolerancia.</p>
+
+  <p><span class="runinhead">ID de caso</span> Especifique una variable de identificador de caso. El valor de ID de caso para el control coincidente se almacenará con cada registro de caso.</p>
+
+  <p><span class="runinhead">Nombre de variable ID de coincidencia</span> Especifique un nombre para la variable que contendrá el id del registro de controles seleccionado. Si no se puede generar una coincidencia, el valor de la variable será un valor perdido del sistema.</p>
+
+  <p class="bullet">• El nombre de variable todavía no debe estar en uso.</p>
+
+  <p><span class="runinhead">Nombre de conjunto de datos de resultados</span> Especifique un nombre para el conjunto de datos que se va a crear. El conjunto de datos contendrá todos los casos y controles que coincidieron con ellos.</p>
+
+  <p class="bullet">• El nombre de conjunto de datos todavía no debe estar en uso.</p>
+
+  <p class="bullet">• El resultado es un conjunto de datos, no un archivo permanente. Debe guardar el conjunto de datos para crear un archivo real.</p>
+
+  <h2>Opciones</h2>
+
+  <p><span class="runinhead">Variable para número de casos elegibles</span> De forma opcional, entre un nombre de variable para registrar el tamaño de la agrupación de control, es decir, el número de casos elegibles, para cada registro de casos. Este es el número de controles que cumplen los criterios de coincidencia después de que se hayan eliminado las coincidencias para los registros de casos anteriores, si el muestreo es sin sustitución.</p>
+
+  <p class="bullet">• El nombre de variable todavía no debe estar en uso</p>
+
+  <p><span class="runinhead">Muestreo</span> Los casos de control se pueden trazar con o sin sustitución.</p>
+
+  <p><span class="runinhead">Dar prioridad a coincidencias exactas</span>   Marque este recuadro para hacer que el algoritmo de coincidencia intente primero una coincidencia exacta antes de intentar una coincidencia inexacta.</p>
+
+  <p><span class="runinhead">Maximizar rendimiento de ejecución</span>   Marque este recuadro para maximizar el rendimiento en la selección de coincidencias: máxima velocidad y uso mínimo de memoria. Para los conjuntos de datos grandes, este recuadro debe estar marcado. Cuando se utiliza, existe una probabilidad ligeramente mayor que un caso no encontrará una coincidencia con un control.</p>
+
+  <p class="bullet">• No puede especificar prioridad exacta y minimizar memoria a la vez.</p>
+
+  <p><span class="runinhead">Aleatorizar el orden de casos al trazar coincidencias</span> Marque esto para trazer coincidencias para los registros de casos en orden aleatorio. De lo contrario, los registros de casos se procesan en el orden en el que se producen en el archivo. Esto podría provocar que se seleccionen menos controles más adelante en el archivo. Si los registros de casos tienen un orden sistemático, el proceso en el orden del archivo podría introducir algún sesgo.</p>
+
+  <p class="bullet">• Esto no tiene ningún efecto cuando está marcado maximizar rendimiento de ejecución.</p>
+
+  <p><span class="runinhead">Semilla de aleatorización</span> Si desea poder reproducir las coincidencias de forma exacta en una futura ejecución con los mismos datos, puede definir un valor de semilla para los números aleatorios utilizados al seleecionar en un conjunto de forma aleatoria. Esta semilla no está relacionada con la semilla de aleatorización general de SPSS Statistics.</p>
+
+  <h2>Características adicionales</h2>
+
+  <p>Este diálogo genera la sintaxis para el comando de extensión FUZZY, así como algún otro código. FUZZY también proporciona formas más generales para realizar una coincidencia. Para mostrar la ayuda de sintaxis para FUZZY, ejecute la sintaxis siguiente:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY tiene varias características no soportadas en este diálogo, que incluye el uso de conjuntos de datos de control y caso separados como entrada, la coincidencia de un conjunto de variables sin la regresión logística intermedia y la coincidencia de varios controles con cada caso. Las funciones personalizadas grabadas en Python también se pueden utilizar para calcular la distancia aproximada.</p>
+
+  <h2>Requisitos</h2>Este comando requiere Python Essentials y, como mínimo, una versión 20 de IBM SPSS Statistics. Para el uso de un solo conjunto de datos, puede ser necesario Statistics versión 21 o un arreglo dinámico para la versión 20.
+
+  <p>Requiere, como mínimo, la versión 1.3.0 del comando de extensión FUZZY. Esta es más reciente que la versión que viene con Statistics 21.0.0.0. Puede descargar Python Essentials desde el sitio web de SPSS   Community en www.ibm.com/developerworks/spssdevcentral.
+  La última versión de FUZZY se puede encontrar en la colección de comandos de extensión.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

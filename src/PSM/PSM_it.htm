@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Messa in corrispondenza punteggi propensione</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Messa in corrispondenza punteggi propensione</h1>Questa procedura
+  mette in corrispondenza i record del caso con record di controllo simili contenuti
+  in un singolo dataset. Esegue prima una regressione logistica con
+  la variabile di gruppo di casi/controllo come variabile
+  dipendente. Quindi, seleziona una corrispondenza per ciascun caso dal
+  gruppo di controllo in base al punteggio propensione dalla
+  regressione logistica. Il punteggio è una stima della probabilità
+  di appartenenza nel gruppo di casi.
+
+  <p>La procedura produce e attiva un nuovo dataset di casi e controlli
+  messi in corrispondenza.</p>
+
+  <p><span class="runinhead">Indicatore gruppo</span> Selezionare la
+  variabile che definisce se un record è nel gruppo di casi o di
+  controllo. Il valore della variabile uno indica un caso e il valore zero indica un controllo.</p>
+
+  <p><span class="runinhead">Predittori</span> Selezionare le variabili
+  da utilizzare nella regressione logistica per modellare l'appartenenza
+  a casi/controlli.</p>
+
+  <p><span class="runinhead">Nome per variabile propensione</span>
+  Immettere un nome per la variabile che conterrà il punteggio
+  (propensione) dalla regressione logistica. Questa variabile verrà utilizzata per la corrispondenza.</p>
+
+  <p class="bullet">• Il nome della variabile non deve essere già in uso.</p>
+
+  <p><span class="runinhead">Tolleranza delle corrispondenze</span> Specificare
+  la tolleranza per il punteggio nei controlli e nei casi
+  corrispondenti. Un controllo è idoneo per la corrispondenza a un caso se
+  il valore assoluto della differenze nei punteggi di propensione è inferiore
+o uguale a questo valore. Il valore 0 indica solo corrispondenze esatte mentre
+  il valore 1 indica che qualsiasi controllo corrisponde a qualsiasi caso. Dei valori più
+  piccoli producono delle corrispondenze più prossime, ma possono aumentare il numero di casi senza
+  corrispondenza.</p>
+
+  <p class="bullet">• Le tabelle di output prodotte da questa procedura
+  mostrano la distribuzione del numero di corrispondenze idonee, tenuto
+  conto della tolleranza e possono essere utili nella scelta di un valore di tolleranza.</p>
+
+  <p><span class="runinhead">ID caso</span> Specificare una variabile
+identificativo del caso. Il valore ID caso per il controllo messo in corrispondenza
+  sarà archiviato con ogni record di caso.</p>
+
+  <p><span class="runinhead">Nome variabile ID di corrispondenza</span> Specificare
+  un nome per la variabile che conterrà l'ID del record di controllo
+  selezionato. Se non è possibile produrre una corrispondenza, il valore di variabile sarà mancante
+  di sistema.</p>
+
+  <p class="bullet">• Il nome della variabile non deve essere già in uso.</p>
+
+  <p><span class="runinhead">Nome dataset di output</span> Specificare un
+  nome per il dataset da creare. Il dataset conterrà tutti i casi e
+  i controlli con cui era stata trovata una corrispondenza.</p>
+
+  <p class="bullet">• Il nome del dataset non deve essere già in uso.</p>
+
+  <p class="bullet">• L'output è un dataset, non un file
+  permanente. È necessario salvare il dataset per creare un file effettivo.</p>
+
+  <h2>Opzioni</h2>
+
+  <p><span class="runinhead">Variabile per numero di casi idonei</span>
+  Facoltativamente, immettere un nome di variabile per registrare la dimensione
+  del pool di controlli, ossia il numero di casi idonei,
+  per ogni record di caso. Questo è il numero di controlli che soddisfa
+  i criteri di messa a confronto dopo che le corrispondenze per i record di caso
+  precedenti sono state rimosse, in caso di campionamento senza sostituzione.</p>
+
+  <p class="bullet">• Il nome della variabile non deve essere già in uso</p>
+
+  <p><span class="runinhead">Campionamento</span> I casi di controllo
+ possono essere estratti con o senza sostituzione.</p>
+
+  <p><span class="runinhead">Dai la priorità alle corrispondenze esatte</span>
+  Selezionare questa casella per fare in modo che l'algoritmo di messa in corrispondenza
+  provi prima una corrispondenza esatta per poi tentare una corrispondenza approssimativa.</p>
+
+  <p><span class="runinhead">Massimizza prestazioni esecuzione</span>
+  Selezionare questa casella per massimizzare le prestazioni nella selezione delle corrispondenze -
+  massima velocità e minimo utilizzo della memoria. Per dataset di grandi
+  dimensioni, questa casella deve essere selezionata. Quando viene utilizzata,
+  c'è una probabilità un po' più elevata che un caso non venga rilevato
+  come corrispondente con un controllo.</p>
+
+  <p class="bullet">• Non è possibile specificare sia la priorità esatta
+  che la minimizzazione della memoria.</p>
+
+  <p><span class="runinhead">Rendi casuale l'ordine dei casi
+  quando si estraggono le corrispondenze</span> Selezionare questa casella per estrarre
+  le corrispondenze per i record di caso in ordine casuale. Altrimenti, i record di caso vengono elaborati nell'ordine in cui ricorrono nel file. Ciò potrebbe determinare
+  un numero di controlli inferiore da cui effettuare la selezione successivamente nel file. Se i record di
+  caso hanno un ordine sistematico, l'elaborazione nell'ordine del file potrebbe
+  introdurre un certo grado di distorsione.</p>
+
+  <p class="bullet">• Questo non ha alcun effetto quando l'opzione
+  Massimizza prestazioni esecuzione è selezionata.</p>
+
+  <p><span class="runinhead">Seme per numeri casuali</span> Se si desidera
+  poter riprodurre le corrispondenze esattamente in una futura esecuzione con gli stessi dati, è possibile impostare un valore
+del seme per i numeri casuali utilizzati quando si effettua la selezione da un insieme in modo casuale. Questo seme non è correlato al seme per numeri casuali generale di SPSS Statistics.</p>
+
+  <h2>Funzioni aggiuntive</h2>
+
+  <p>Questa finestra di dialogo genera la sintassi del comando di estensione FUZZY e di altro codice. FUZZY fornisce anche dei modi più generici per eseguire la messa in corrispondenza. Per visualizzare la
+  guida per la sintassi per FUZZY, eseguire la sintassi riportata di seguito.</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY ha diverse funzioni non supportate in questa finestra di dialogo,
+  tra cui l'utilizzo di dataset di controlli e casi separati come input,
+la messa in corrispondenza su una serie di variabili senza la regressione
+  logistica intermedia e la messa in corrispondenza di più controlli con ogni caso. Le funzioni personalizzate scritte in Python possono
+ essere utilizzate anche per calcolare la distanza approssimativa.</p>
+
+  <h2>Requisiti</h2>Questo comando richiede Python Essentials
+  e almeno la versione 20 di IBM SPSS Statistics. Per l'utilizzo
+  di dataset singoli, potrebbe essere richiesto Statistics versione 21
+  oppure una hot fix per la versione 20.
+
+  <p>È richiesta almeno la versione più recente 1.3.0 del comando di estensione FUZZY. È più recente della versione fornita con Statistics
+  21.0.0.0. È possibile scaricare Python Essentials dal sito Web della
+  comunità di SPSS all'indirizzo www.ibm.com/developerworks/spssdevcentrl.
+  La versione più recente di FUZZY è disponibile nella raccolta dei comandi
+  di estensione.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

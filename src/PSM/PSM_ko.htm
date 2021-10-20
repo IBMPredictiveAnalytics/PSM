@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>성향 점수 매칭</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>성향 점수 매칭</h1>이 프로시저는 단일 데이터 세트에 포함되어 있는
+  유사한 제어 레코드와 케이스 레코드를 매치시킵니다. 먼저 종속변수로서
+  케이스/대조군 변수와 함께 로지스틱 회귀를 실행합니다. 그런 다음
+  로지스틱 회귀의 성향 점수를 기초로 대조군에서 각 케이스의 매치를 선택합니다. 점수는 케이스 집단에서 소속 확률에 대한 추정값입니다.  <p>프로시저는 케이스 및 매치되는 제어의 새 데이터 세트를 생성하고 활성화합니다.</p>
+
+  <p><span class="runinhead">집단 지표</span> 레코드가 케이스에 있는지 또는 제어 그룹에 있는지
+  여부를 정의하는 변수를 선택하십시오. 변수 값 1은 케이스를 표시하고, 0 값은 제어를 표시합니다.</p>
+
+  <p><span class="runinhead">예측자</span> 모형 케이스/제어 소속에 대한 로지스틱 회귀에서
+  사용할 변수를 선택하십시오.</p>
+
+  <p><span class="runinhead">성향 변수 이름</span>
+  로지스틱 회귀에서 점수(성향)를 보유할 변수의 이름을 입력하십시오. 이 변수는 매칭에 사용됩니다.</p>
+
+  <p class="bullet">• 변수 이름은 아직 사용 중이지 않은 것이어야 합니다.</p>
+
+  <p><span class="runinhead">매치 공차</span> 케이스 및 제어 매치에서
+  점수에 대한 공차를 지정하십시오. 성향 점수 차이의 절대값이 이 값 이하인 경우
+  케이스를 매치하는 데 제어가 적합니다. 0 값은 정확한 매치만을 의미하는 반면
+  1 값은 임의 제어가 임의 케이스에 매치함을 의미합니다. 값이 작아지면 좀 더 유사한 매치가 생성되지만
+  매치하지 않는 케이스 수가 늘어날 수 있습니다.</p>
+
+  <p class="bullet">• 이 프로시저에서 생성하는 결과 표는
+  제공된 공차에 적합한 매치 수 분포를 표시하며 공차 값 선택 시
+  유용할 수 있습니다.</p>
+
+  <p><span class="runinhead">케이스 ID</span> 케이스 식별자 변수를
+  지정합니다. 매치하는 제어에 대한 케이스 ID 값은 각 케이스 레코드와 함께 저장됩니다.</p>
+
+  <p><span class="runinhead">매치 ID 변수 이름</span> 선택한 제어 레코드의 ID를 보유할 변수의
+  이름을 지정하십시오. 매치를 생성할 수 없으면 변수 값이 시스템 결측값이 됩니다.</p>
+
+  <p class="bullet">• 변수 이름은 아직 사용 중이지 않은 것이어야 합니다.</p>
+
+  <p><span class="runinhead">결과 데이터 세트 이름</span> 작성할 데이터 세트의 이름을
+  지정하십시오. 데이터 세트는 매치하는 제어 및 케이스 모두를 보유합니다.</p>
+
+  <p class="bullet">• 데이터 세트 이름은 아직 사용 중이지 않은 것이어야 합니다.</p>
+
+  <p class="bullet">• 결과가 영구 파일이 아닌 데이터 세트입니다. 실제 파일을 작성하려면 데이터 세트를 저장해야 합니다.</p>
+
+  <h2>옵션</h2>
+
+  <p><span class="runinhead">적합한 케이스 수 변수</span> 선택적으로
+  적합한 케이스 수와 같이 각 케이스 레코드에 대해 제어 풀의 크기를 기록할 변수
+  이름을 입력하십시오. 대체하지 않는 샘플링의 경우 이전 케이스 레코드에 대한
+  매치를 제거한 후 매칭 기준에 맞는 제어 수입니다.</p>
+
+  <p class="bullet">• 변수 이름은 아직 사용 중이지 않은 것이어야 합니다.</p>
+
+  <p><span class="runinhead">샘플링</span> 제어 케이스는 대체를 수행하거나
+  대체를 수행하지 않고 그릴 수 있습니다.</p>
+
+  <p><span class="runinhead">정확한 매치에 우선순위 부여</span>
+  매치 알고리즘이 퍼지 매치를 시도하기 전에 먼저 정확히 매치를 수행하도록 하려면 이
+  상자를 선택하십시오.</p>
+
+  <p><span class="runinhead">실행 성능 최대화</span>
+  매치 선택 시 성능을 최대화하려면 즉 속도는 높이고 메모리 사용량은 줄이려면 이 상자를
+  선택하십시오. 대용량 데이터 세트의 경우 이 상자를 반드시 선택해야 합니다. 사용되는 경우 제어와 매치할 케이스를 찾지 못하는 경우가 약간 많아집니다.</p>
+
+  <p class="bullet">• 정확한 우선순위와 최소 메모리 모두를 지정할 수 없습니다.</p>
+
+  <p><span class="runinhead">매치할 때 케이스 순서를 무작위화함</span> 랜덤 순서로
+  케이스 레코드에 대한 매치를 그리려면 이 상자를 선택하십시오. 그렇지 않으면
+  케이스 레코드가 파일에서 발생하는 순서 대로 처리됩니다. 그러면 적게 발생하는 제어가
+  파일에서 나중에 선택됩니다. 케이스 레코드에 시스템에서 지정한 순서가 있는 경우 파일 순서 처리에
+  몇 가지 편향을 도입할 수 있습니다.</p>
+
+  <p class="bullet">• 실행 성능 최대화가 선택되면 영향이 없습니다.</p>
+
+  <p><span class="runinhead">난수 시작값</span> 동일한 데이터에 대해 향후 실행 시 정확한
+  매치를 다시 생성할 수 있도록 하려면, 랜덤으로 세트에서 선택 시 사용되는 난수에 대해
+  난수 시작값을 설정할 수 있습니다. 이 난수 시작값은 일반 SPSS Statistics 난수 시작값과 관계가 없습니다.</p>
+
+  <h2>추가 기능</h2>
+
+  <p>이 대화 상자는 FUZZY 확장 명령 및 일부 기타 코드에 대한 명령문을
+  생성합니다. FUZZY도 매칭을 수행하는 일반적인 방법을 제공합니다. FUZZY에 대한 명령문 도움말을 표시하려면 다음 구문을 실행하십시오.</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>FUZZY에는 입력으로 별도의 케이스 및 제어 데이터 세트 사용, 중간 로지스틱 회귀 없이
+  변수 센트 매치 및 각 케이스와 다중 제어 매치를 포함하여
+  이 대화 상자에서 지원하지 않는 여러 기능이 있습니다. Python에서 작성된 사용자 정의
+  함수도 퍼지 거리 계산에 사용될 수 있습니다.</p>
+
+  <h2>요구 사항</h2>이 명령문에는 Python Essentials 및 최소한
+  IBM SPSS Statistics 버전 20이 필요합니다. 단일 데이터 세트 사용의 경우,
+  Statistics 버전 21 또는 버전 20에 대한 긴급 수정이 필요할 수 있습니다.  <p>최소 버전 1.3.0 이상의 FUZZY 확장 명령이 필요합니다. Statistics 21.0.0.0과 함께 제공되는 버전보다 신규 버전입니다. SPSS
+  커뮤니티 웹 사이트(www.ibm.com/developerworks/spssdevcentral)에서 Python Essentials를 다운로드할 수 있습니다. 최신 버전의 FUZZY는 확장 명령 콜렉션에서 찾을 수 있습니다.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

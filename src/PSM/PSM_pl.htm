@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta http-equiv="Content-Type" content=
+  "text/html; charset=utf-8">
+
+  <title>Dopasowanie oceny skłonności</title>
+  <style type="text/css">
+
+  <!-- 
+
+  H1 {font-weight:bold; color:#006699; font-size:125%; }
+  H2 {font-weight:bold; color:#006699; font-size:110%; }
+  TABLE {font-size:100%;}
+
+  /* paragraph tags */
+  .step {text-indent: -1.3em; margin-left:1.3em; margin-top: 0px;}
+  .menuselection {margin-left:10px}
+  .bullet {list-style-type: disc;margin-top:12px; margin-left:36px; text-indent:-1em; }
+  .codeblock {background-color: #ffffe6; display:block; margin-left:5px; padding:5px;}
+
+  /* inline tags */
+  .screen {font-weight:bold; color:#408080}                       /*** used refer to on-screen text ***/
+  .name {font-style: italic}                                                       /*** used to tag names, such as variable names, file names, and so forth ***/
+  .runinhead {font-weight: bold} 
+  .superscript {vertical-align:super; font-size:80%}
+  .subscript {vertical-align:sub; font-size:80%}
+
+
+  --> 
+  </style>
+</head>
+
+<body>
+  <h1>Dopasowanie oceny skłonności</h1>Ta procedura dopasowuje
+  rekordy obserwacji do podobnych rekordów kontroli zawartych w
+  pojedynczym zbiorze danych. Najpierw uruchamia regresję
+  logistyczną ze zmienną grupy obserwacji/grupy kontrolnej jako
+  zmienną zależną. Następnie wybiera dopasowanie dla każdej
+  obserwacji z grupy kontrolnej na podstawie oceny skłonności z
+  regresji logistycznej. Ocena jest oszacowaniem prawdopodobieństwa
+  członkostwa w grupie obserwacji.
+
+  <p>Ta procedura generuje i
+  aktywuje nowy zbiór danych, który zawiera obserwacje i dopasowane
+  kontrole.</p>
+
+  <p><span class="runinhead">Wskaźnik grupy</span> Wybierz zmienną,
+  która definiuje, czy rekord należy do grupy obserwacji, czy grupy
+  kontrolnej. Wartość zmiennej równa jeden wskazuje obserwację, a
+  wartość równa zero wskazuje kontrolę.</p>
+
+  <p><span class="runinhead">Predyktory</span> Wybierz zmienne do
+  użycia w regresji logistycznej do modelowania członkostwa w
+  grupie obserwacji/grupie kontrolnej.</p>
+
+  <p><span class="runinhead">Nazwa zmiennej skłonności</span>
+  Wprowadź nazwę dla zmiennej, która będzie zawierała ocenę
+  (skłonność) z regresji logistycznej. Ta zmienna będzie używana na
+  potrzeby dopasowywania.</p>
+
+  <p class="bullet">• Nazwa zmiennej nie powinna być jeszcze
+  używana.</p>
+
+  <p><span class="runinhead">Tolerancja dopasowania</span> Określ
+  tolerancję dla oceny podczas dopasowywania obserwacji i kontroli. Kontrola może zostać dopasowana do obserwacji (jest uprawniona),
+  jeśli wartość bezwzględna różnicy w ocenach skłonności jest niższa
+  lub równa tej wartości. Wartość 0 oznacza tylko dokładną
+  zgodność, a wartość 1 oznacza, że dowolna kontrola może być zgodna
+  z dowolną obserwacją. Mniejsze wartości zapewniają dokładniejsze
+  dopasowania, ale powodują zwiększenie liczby obserwacji bez
+  dopasowania.</p>
+
+  <p class="bullet">• Tabele wyników powstające w wyniku tej
+  procedury przedstawiają rozkład liczby uprawnionych dopasowań z
+  uwzględnieniem tolerancji i może być użyteczna w przypadku
+  wybierania wartości tolerancji.</p>
+
+  <p><span class="runinhead">Id. obserwacji</span> Określ zmienną
+  identyfikatora obserwacji. Wartość identyfikatora obserwacji dla
+  kontroli z dopasowaniem zostanie zapisana w rekordzie każdej
+  kontroli.</p>
+
+  <p><span class="runinhead">Nazwa zmiennej id. dopasowania</span>
+  Określ nazwę dla zmiennej, która  będzie przechowywać identyfikator
+  wybranego rekordu kontroli. Jeśli nie można uzyskać dopasowania,
+  wówczas wartość zmiennej będzie taka sama, jak brak systemowy.</p>
+
+  <p class="bullet">• Nazwa zmiennej nie powinna być jeszcze
+  używana.</p>
+
+  <p><span class="runinhead">Nazwa wynikowego zbioru danych</span>
+  Określ nazwę dla zbioru danych, jaki zostanie utworzony. Zbiór
+  danych będzie przechowywał wszystkie obserwacje i kontrole, które
+  zostały do nich dopasowane.</p>
+
+  <p class="bullet">• Nazwa zbioru danych nie powinna być jeszcze
+  używana.</p>
+
+  <p class="bullet">• Wynik jest zbiorem danych, a nie trwałym
+  plikiem. Zbiór danych należy zapisać w celu utworzenia
+  rzeczywistego pliku.</p>
+
+  <h2>Opcje</h2>
+
+  <p><span class="runinhead">Zmienna dla liczby uprawnionych
+  obserwacji</span> Opcjonalnie wprowadź nazwę zmiennej, aby
+  zarejestrować rozmiar puli kontroli, tj. liczbę uprawnionych
+  obserwacji, dla rekordu każdej obserwacji. Jest to liczba
+  kontroli, które spełniają kryteria dopasowania po usunięciu
+  dopasowań dla poprzednich rekordów obserwacji, pod warunkiem że
+  losowanie odbywa się bez zwracania.</p>
+
+  <p class="bullet">• Nazwa zmiennej nie powinna być jeszcze używana</p>
+
+  <p><span class="runinhead">Losowanie</span> Obserwacje kontrolne
+  mogą być losowane ze zwracaniem lub bez zwracania.</p>
+
+  <p><span class="runinhead">Dokładna zgodność ma priorytet</span>
+  Zaznaczenie tego pola wyboru spowoduje, że algorytm dopasowywania
+  będzie najpierw podejmował próbę uzyskania dokładnej zgodności, a
+  następnie podejmie próby uzyskania dopasowania rozmytego.</p>
+
+  <p><span class="runinhead">Maksymalizuj wydajność wykonywania</span>
+  Zaznacz to pole wyboru, aby zmaksymalizować wydajność wybierania
+  dopasowań, zapewniając maksymalną szybkość i minimalne wykorzystanie
+  pamięci. To pole wyboru należy zaznaczyć w przypadku dużych zbiorów
+  danych. Jeśli to pole zostanie zaznaczone, wówczas istnieje większa
+  szansa na to, że obserwacja nie zostanie dopasowana do kontroli.</p>
+
+  <p class="bullet">• Nie można jednocześnie wybrać ustawienia
+  określającego priorytet dla dokładnej zgodności oraz ustawienia
+  minimalizującego obciążenie pamięci.</p>
+
+  <p><span class="runinhead">Podczas dopasowywania ustaw obserwacje
+  w kolejności losowej</span> Zaznaczenie tego pola wyboru spowoduje,
+  że dopasowywanie rekordów obserwacji będzie przebiegało w
+  kolejności losowej. Jeśli to pole nie zostanie zaznaczone, wówczas
+  rekordy obserwacji będą przetwarzane w kolejności, w jakiej
+  występują w pliku. To może spowodować zmniejszenie liczby
+  kontroli dostępnych później do wyboru w pliku. Jeśli rekordy
+  obserwacji są ustawione w kolejności uporządkowanej, wówczas
+  przetwarzanie zgodnie z kolejnością w pliku może spowodować pewne
+  odchylenie.</p>
+
+  <p class="bullet">• Zaznaczenie tego pola wyboru nie ma żadnego
+  skutku, jeśli zaznaczone jest pole wyboru Maksymalizuj wydajność
+  wykonywania.</p>
+
+  <p><span class="runinhead">Wartość początkowa generatora liczb
+  losowych</span> Jeśli wymagane jest dokładne odtworzenie dopasowań
+  w kolejnym  uruchomieniu procedury z tymi samymi danymi, wówczas można
+  ustawić wartość początkową dla liczb losowych na potrzeby losowego
+  wybierania ze zbioru. Ta wartość początkowa generatora liczb
+  losowych nie jest powiązana z wartością początkową generatora liczb
+  losowych w produkcie SPSS Statistics.</p>
+
+  <h2>Funkcje dodatkowe</h2>
+
+  <p>To okno dialogowe generuje komendę rozszerzającą
+  FUZZY, a także inny kod. Komenda FUZZY udostępnia również inne
+  ogólne sposoby dopasowywania. Aby wyświetlić pomoc dotyczącą
+  komendy FUZZY, uruchom następującą komendę:</p>
+
+  <p class="codeblock">FUZZY /HELP.</p>
+
+  <p>Komenda FUZZY ma kilka funkcji, które nie są obsługiwane w tym
+  oknie dialogowym - między innymi dotyczące stosowania osobnych
+  zbiorów danych obserwacji i kontroli jako danych wejściowych,
+  funkcje umożliwiające dopasowywanie zestawu zmiennych bez
+  pośredniej regresji logistycznej, a także funkcje dopasowywania
+  wielu kontroli z każdą obserwacją. Niestandardowe funkcje napisane w języku Python również mogą być
+  używane na potrzeby obliczania odległości rozmycia.</p>
+
+  <h2>Wymagania</h2>Ta komenda wymaga dodatku Python Essentials
+  oraz produktu IBM SPSS Statistics przynajmniej w wersji 20. W przypadku użycia pojedynczego zbioru danych konieczny może być
+  produkt Statistics 21 lub poprawka hot fix dla wersji 20.
+
+  <p>Wymagana jest co najmniej wersja 1.3.0 komendy rozszerzającej FUZZY. Jest to wersja nowsza niż wersja dostarczana z produktem Statistics
+  21.0.0.0 Dodatek Python Essentials można pobrać z serwisu WWW
+  SPSS Community, pod adresem
+  www.ibm.com/developerworks/spssdevcentral/.
+  Najnowszą wersję komendy FUZZY można znaleźć w kolekcji Extension
+  Commands.</p>
+  <hr>
+
+  <p style="font-size:80%;">
+  © Copyright IBM Corp. 1989, 2013</p>
+</body>
+</html>

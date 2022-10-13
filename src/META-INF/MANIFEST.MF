@@ -1,4 +1,5 @@
 Name: PSM
+Display-Name: Propensity Score Matching
 Dialog-Specs: PSM.spd
 Summary: Propensity Score Matching
 Description: This dialog does propensity score matching for cases and 

@@ -1,8 +1,0 @@
-{
- "type": [ "Extension" ],
-"provider": [ "IBM" ],
-"software": [ "SPSS Statistics" ],
-"language": [ "Python 3" ],
-"category": [ "Analysis" ],
-"promotion": [ "No" ] 
-}
